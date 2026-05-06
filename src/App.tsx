@@ -7,6 +7,7 @@ import { StudioPage } from './pages/Studio';
 import { AuthLogsPage } from './pages/AuthLogs';
 import { SystemHealthPage } from './pages/SystemHealth';
 import { LoginPage } from './pages/Login';
+import { NotFoundPage } from './pages/NotFound';
 import { AuthProvider } from './lib/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -36,7 +37,7 @@ export default function App() {
             <Route path="system" element={<SystemHealthPage />} />
           </Route>
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
