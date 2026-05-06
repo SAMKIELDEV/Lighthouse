@@ -40,7 +40,7 @@ export default function App() {
               <Route path="system" element={<SystemHealthPage />} />
             </Route>
 
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

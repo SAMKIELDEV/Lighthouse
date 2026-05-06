@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, Loader2 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import Logo from '../assets/SAMKIEL_LOGO.png';
@@ -14,14 +14,25 @@ export function LoginPage() {
   const { signIn, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const redirectPath = searchParams.get('redirect') || '/dashboard';
 
   React.useEffect(() => {
     if (!isLoading && user && user.role === 'admin') {
-      navigate(from, { replace: true });
+      navigate(redirectPath, { replace: true });
     }
-  }, [user, isLoading, navigate, from]);
+  }, [user, isLoading, navigate, redirectPath]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +41,9 @@ export function LoginPage() {
 
     try {
       await signIn(email, password);
-      navigate(from, { replace: true });
+      navigate(redirectPath, { replace: true });
     } catch (err: any) {
+
       setError(err.message || 'Invalid credentials or access denied');
     } finally {
       setIsSubmitting(false);

@@ -15,8 +15,9 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user || user.role !== 'admin') {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
   }
+
 
   return <>{children}</>;
 }
