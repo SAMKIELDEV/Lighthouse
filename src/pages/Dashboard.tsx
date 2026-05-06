@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Activity, Layers, AlertCircle, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useAdmin } from '../lib/AdminContext';
-import { AdminDashboardStats, SystemHealth } from '@samkiel/authsdk';
+import { AdminDashboardStats, SystemHealth, AdminActivityLog } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 
 function StatCard({ title, value, icon: Icon, trend, loading }: { title: string, value: string | number, icon: any, trend?: string, loading?: boolean }) {
@@ -83,7 +83,7 @@ export function Dashboard() {
              ) : stats?.recentActivity.length === 0 ? (
                <p className="text-secondary text-sm italic">No recent activity.</p>
              ) : (
-               stats?.recentActivity.map((activity) => (
+               stats?.recentActivity.map((activity: AdminActivityLog) => (
                  <div key={activity.id} className="flex items-center gap-4 group">
                    <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform"></div>
                    <p className="text-sm text-secondary flex-1">

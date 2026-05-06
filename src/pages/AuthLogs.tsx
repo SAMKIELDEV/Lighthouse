@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAdmin } from '../lib/AdminContext';
 import { AdminAuthLog } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
-import { Download, Search, Filter, Calendar } from 'lucide-react';
+import { Download, Search, Calendar } from 'lucide-react';
 
 export function AuthLogsPage() {
   const admin = useAdmin();
