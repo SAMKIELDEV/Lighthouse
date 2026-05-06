@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAdmin } from '../lib/AdminContext';
+import { useAdmin } from '../lib/AuthContext';
 import { KivMetrics } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';

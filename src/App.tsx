@@ -6,25 +6,27 @@ import { ProductsPage } from './pages/Products';
 import { StudioPage } from './pages/Studio';
 import { AuthLogsPage } from './pages/AuthLogs';
 import { SystemHealthPage } from './pages/SystemHealth';
-import { AdminProvider } from './lib/AdminContext';
-
-// Helper to get cookie for SAMKIEL ID
-const getCookie = (name: string) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return null;
-};
+import { LoginPage } from './pages/Login';
+import { AuthProvider } from './lib/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export default function App() {
-  // Extract token from cookie (SAMKIEL ID standard)
-  const token = getCookie('sk_access_token') || 'mock_admin_token';
-
   return (
-    <AdminProvider token={token}>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AppLayout />}>
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Protected Routes */}
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UsersPage />} />
@@ -32,10 +34,11 @@ export default function App() {
             <Route path="studio" element={<StudioPage />} />
             <Route path="auth-logs" element={<AuthLogsPage />} />
             <Route path="system" element={<SystemHealthPage />} />
-            <Route path="*" element={<div className="text-secondary text-center mt-20">Page not found</div>} />
           </Route>
+
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
-    </AdminProvider>
+    </AuthProvider>
   );
 }

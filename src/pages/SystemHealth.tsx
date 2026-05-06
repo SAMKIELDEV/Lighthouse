@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAdmin } from '../lib/AdminContext';
+import { useAdmin } from '../lib/AuthContext';
 import { SystemHealth } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';

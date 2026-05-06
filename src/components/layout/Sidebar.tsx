@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../lib/AuthContext';
 import Logo from '../../assets/SAMKIEL_LOGO.png';
 
 const NAV_ITEMS = [
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <div className="fixed inset-y-0 left-0 w-64 bg-surface border-r border-border-color flex flex-col z-10">
@@ -59,13 +61,17 @@ export function Sidebar() {
       <div className="p-4 border-t border-border-color">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
-            E
+            {user?.name?.[0] || 'A'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-primary truncate">Ezekiel</p>
-            <p className="text-xs text-secondary truncate">Admin</p>
+            <p className="text-sm font-medium text-primary truncate">{user?.name || 'Admin'}</p>
+            <p className="text-xs text-secondary truncate">{user?.role || 'Admin'}</p>
           </div>
-          <button aria-label="Sign Out" className="text-secondary hover:text-destructive transition-colors">
+          <button 
+            onClick={() => signOut()}
+            aria-label="Sign Out" 
+            className="text-secondary hover:text-destructive transition-colors p-1 rounded-md hover:bg-base"
+          >
             <LogOut className="w-4 h-4" />
           </button>
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAdmin } from '../lib/AdminContext';
+import { useAdmin } from '../lib/AuthContext';
 import { AdminAuthLog } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Download, Search, Calendar } from 'lucide-react';

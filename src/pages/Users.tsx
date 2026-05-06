@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAdmin } from '../lib/AdminContext';
+import { useAdmin } from '../lib/AuthContext';
 import { AdminUser, AdminUserDetail } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Search, Filter, UserCheck, UserMinus, Trash2, X } from 'lucide-react';

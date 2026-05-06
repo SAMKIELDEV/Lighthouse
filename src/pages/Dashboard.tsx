@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Activity, Layers, AlertCircle, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { useAdmin } from '../lib/AdminContext';
+import { useAdmin } from '../lib/AuthContext';
 import { AdminDashboardStats, SystemHealth, AdminActivityLog } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 
