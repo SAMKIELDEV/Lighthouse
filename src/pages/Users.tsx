@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAdmin } from '../lib/AuthContext';
 import { AdminUser, AdminUserDetail } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
@@ -7,12 +8,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function UsersPage() {
   const admin = useAdmin();
+  const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<AdminUserDetail | null>(null);
+
+  useEffect(() => {
+    const userId = searchParams.get('id');
+    if (userId) {
+      viewUserDetail(userId);
+    }
+  }, [searchParams]);
+
 
   const fetchUsers = async () => {
     setLoading(true);

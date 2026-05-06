@@ -93,42 +93,51 @@ export function StudioPage() {
         {/* Signups Chart */}
         <div className="bg-surface border border-border-color rounded-xl p-6">
           <h3 className="text-lg font-heading font-semibold mb-6">User Acquisition (Last 30 Days)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={metrics?.signupsByDay}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
-                <XAxis dataKey="date" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E8FF47', fontWeight: 'bold' }}
-                />
-                <Line type="monotone" dataKey="count" stroke="#E8FF47" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="h-64 flex items-center justify-center">
+            {metrics?.signupsByDay && metrics.signupsByDay.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={metrics?.signupsByDay}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                  <XAxis dataKey="date" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px' }}
+                    itemStyle={{ color: '#E8FF47', fontWeight: 'bold' }}
+                  />
+                  <Line type="monotone" dataKey="count" stroke="#E8FF47" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-secondary text-sm italic">No data available for this period.</p>
+            )}
           </div>
         </div>
 
         {/* DAU Chart */}
         <div className="bg-surface border border-border-color rounded-xl p-6">
           <h3 className="text-lg font-heading font-semibold mb-6">Daily Active Users (Last 14 Days)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={metrics?.dauByDay}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
-                <XAxis dataKey="date" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  cursor={{ fill: '#262626', opacity: 0.4 }}
-                  contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E8FF47', fontWeight: 'bold' }}
-                />
-                <Bar dataKey="count" fill="#E8FF47" radius={[4, 4, 0, 0]} barSize={24} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="h-64 flex items-center justify-center">
+            {metrics?.dauByDay && metrics.dauByDay.some(d => d.count > 0) ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={metrics?.dauByDay}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+                  <XAxis dataKey="date" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                  <Tooltip 
+                    cursor={{ fill: '#262626', opacity: 0.4 }}
+                    contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px' }}
+                    itemStyle={{ color: '#E8FF47', fontWeight: 'bold' }}
+                  />
+                  <Bar dataKey="count" fill="#E8FF47" radius={[4, 4, 0, 0]} barSize={24} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-secondary text-sm italic">No activity data available yet.</p>
+            )}
           </div>
         </div>
       </div>
+
     </div>
   );
 }

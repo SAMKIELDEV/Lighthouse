@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react';
 import { useAdmin } from '../lib/AuthContext';
 import { AdminProduct } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
-import { Layers, Users, ExternalLink, Globe } from 'lucide-react';
+import { Layers, Users, ExternalLink, Globe, Plus, Edit2, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ProductModal } from '../components/ProductModal';
+import { useAlert } from '../lib/AlertContext';
 
 export function ProductsPage() {
   const admin = useAdmin();
+  const { showAlert } = useAlert();
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -28,13 +33,56 @@ export function ProductsPage() {
     fetchProducts();
   }, []);
 
+  const handleSaveProduct = async (data: any) => {
+    if (editingProduct) {
+      await admin.updateProduct(editingProduct.id, data);
+    } else {
+      await admin.registerProduct(data);
+    }
+    fetchProducts();
+  };
+
+  const handleDeleteProduct = (id: string, name: string) => {
+    showAlert({
+      title: 'Delete Product',
+      description: `Are you sure you want to remove ${name}? This will also disconnect all users.`,
+      type: 'error',
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        try {
+          await admin.deleteProduct(id);
+          fetchProducts();
+        } catch (err: any) {
+          setError(err.message || 'Failed to delete product');
+        }
+      }
+    });
+  };
+
+  const openRegisterModal = () => {
+    setEditingProduct(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (product: AdminProduct) => {
+    setEditingProduct(product);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">Products & Apps</h1>
-          <p className="text-secondary mt-1 text-sm md:text-base">Monitor all live products in the SAMKIEL ecosystem.</p>
+          <p className="text-secondary mt-1 text-sm md:text-base">Monitor and manage all live products in the SAMKIEL ecosystem.</p>
         </div>
+        <button 
+          onClick={openRegisterModal}
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-accent text-base rounded-xl font-bold hover:opacity-90 transition-opacity"
+        >
+          <Plus className="w-5 h-5" />
+          Register Product
+        </button>
       </div>
 
       {error && (
@@ -72,8 +120,23 @@ export function ProductsPage() {
               key={product.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-surface border border-border-color rounded-xl p-6 flex flex-col hover:border-accent/50 transition-colors group"
+              className="bg-surface border border-border-color rounded-xl p-6 flex flex-col hover:border-accent/50 transition-colors group relative"
             >
+              <div className="absolute top-6 right-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={() => openEditModal(product)}
+                  className="p-2 bg-base border border-border-color rounded-lg text-secondary hover:text-primary transition-colors"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => handleDeleteProduct(product.id, product.name)}
+                  className="p-2 bg-base border border-border-color rounded-lg text-destructive hover:bg-destructive/10 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+
               <div className="flex justify-between items-start mb-6">
                 <div className="p-3 bg-base rounded-lg border border-border-color text-accent">
                   <Layers className="w-6 h-6" />
@@ -87,7 +150,7 @@ export function ProductsPage() {
               </div>
 
               <div className="flex-1 space-y-1 mb-6">
-                <h3 className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors">
+                <h3 className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors pr-16">
                   {product.name}
                 </h3>
                 <div className="flex items-center gap-1.5 text-secondary text-sm">
@@ -127,6 +190,14 @@ export function ProductsPage() {
           ))
         )}
       </div>
+
+      <ProductModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveProduct}
+        product={editingProduct}
+      />
     </div>
   );
 }
+
