@@ -10,12 +10,15 @@ export function SystemHealthPage() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [now, setNow] = useState<Date>(new Date());
 
   const fetchData = useCallback(async (isManual = false) => {
-    if (isManual) setLoading(true);
+    if (isManual && !health) setLoading(true);
+    if (health) setRefreshing(true);
+    
     try {
       const [healthRes, incidentsRes] = await Promise.all([
         admin.getSystemHealth(),
@@ -29,8 +32,9 @@ export function SystemHealthPage() {
       setError(err.message || 'Failed to fetch system data');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
-  }, [admin]);
+  }, [admin, health]);
 
   useEffect(() => {
     fetchData(true);
@@ -40,7 +44,7 @@ export function SystemHealthPage() {
       clearInterval(interval);
       clearInterval(timeInterval);
     };
-  }, [fetchData]);
+  }, []);
 
   const getOverallStatus = () => {
     if (!health) return 'unknown';
@@ -66,11 +70,7 @@ export function SystemHealthPage() {
   };
 
   const ServiceCard = ({ service }: { service: ServiceStatus }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-surface border border-border-color p-6 rounded-xl space-y-4 hover:border-accent/30 transition-colors group"
-    >
+    <div className="bg-surface border border-border-color p-6 rounded-xl space-y-4 hover:border-accent/30 transition-colors group">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-bold text-secondary uppercase tracking-widest">{service.name}</h4>
         <div className={`p-2 rounded-lg ${
@@ -97,7 +97,7 @@ export function SystemHealthPage() {
         </div>
         
         {service.detail && (
-          <p className="text-[10px] text-secondary font-medium flex items-center gap-1.5">
+          <p className="text-[10px] text-secondary font-medium flex items-center gap-1.5 line-clamp-1" title={service.detail}>
             <Info className="w-3 h-3" />
             {service.detail}
           </p>
@@ -108,7 +108,7 @@ export function SystemHealthPage() {
         <span className="text-[9px] text-secondary font-bold uppercase tracking-tighter">Availability: 99.9%</span>
         <span className="text-[9px] text-secondary font-medium italic">Checked {formatCheckedAgo(service.checkedAt)}</span>
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
@@ -121,10 +121,11 @@ export function SystemHealthPage() {
         <div className="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
           <button 
             onClick={() => fetchData(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-base border border-border-color rounded-md text-sm font-bold hover:bg-surface transition-colors w-full sm:w-auto group"
+            className="relative flex items-center justify-center gap-2 px-4 py-2 bg-base border border-border-color rounded-md text-sm font-bold hover:bg-surface transition-colors w-full sm:w-auto group overflow-hidden"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
-            Refresh Status
+            {refreshing && <motion.div layoutId="refresh-bar" className="absolute bottom-0 left-0 h-0.5 bg-accent w-full" />}
+            <RefreshCw className={`w-4 h-4 ${loading || refreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+            {refreshing ? 'Refreshing...' : 'Refresh Status'}
           </button>
           <p className="text-[10px] text-secondary font-medium italic">
             Global update every 60s
@@ -165,10 +166,11 @@ export function SystemHealthPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && !health ? (
           Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-40 w-full rounded-xl" />)
-        ) : health?.map((service, idx) => (
-          <ServiceCard key={idx} service={service} />
+        ) : health?.map((service) => (
+          <ServiceCard key={service.name} service={service} />
         ))}
       </div>
+
 
       <div className="bg-surface border border-border-color rounded-xl overflow-hidden shadow-sm">
         <div className="p-8 border-b border-border-color flex items-center justify-between">

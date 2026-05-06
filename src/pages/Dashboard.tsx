@@ -109,16 +109,14 @@ export function Dashboard() {
                 </div>
               ))
             ) : health ? (
-              <>
-                <HealthItem name="SAMKIEL ID" status={health.samkielIdApi} />
-                <HealthItem name="KIV API" status={health.kivApi} />
-                <HealthItem name="Database" status={health.database} />
-                <HealthItem name="NPM Registry" status="operational" />
-              </>
+              health.map((service) => (
+                <HealthItem key={service.name} name={service.name} status={service.status} />
+              ))
             ) : (
               <p className="text-secondary text-sm italic">Health data unavailable.</p>
             )}
           </div>
+
           <div className="mt-8 pt-6 border-t border-border-color">
             <a href="/system" className="text-xs font-bold text-accent hover:underline flex items-center gap-2">
               View Detailed Health Report
@@ -133,15 +131,26 @@ export function Dashboard() {
 
 function HealthItem({ name, status }: { name: string, status: string }) {
   const isOk = status === 'operational';
+  const isDown = status === 'down';
+  
   return (
     <div className="flex items-center justify-between">
       <p className="text-sm text-primary">{name}</p>
       <div className="flex items-center gap-2">
-        {isOk ? <CheckCircle2 className="w-3 h-3 text-success" /> : <AlertTriangle className="w-3 h-3 text-warning" />}
-        <span className={`text-[10px] font-bold uppercase ${isOk ? 'text-success' : 'text-warning'}`}>
+        {isOk ? (
+          <CheckCircle2 className="w-3 h-3 text-success" />
+        ) : isDown ? (
+          <AlertCircle className="w-3 h-3 text-destructive" />
+        ) : (
+          <AlertTriangle className="w-3 h-3 text-warning" />
+        )}
+        <span className={`text-[10px] font-bold uppercase ${
+          isOk ? 'text-success' : isDown ? 'text-destructive' : 'text-warning'
+        }`}>
           {status}
         </span>
       </div>
     </div>
   );
 }
+
