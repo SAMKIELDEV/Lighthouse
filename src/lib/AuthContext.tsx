@@ -4,7 +4,7 @@ import { createClient, SamkielUser, AdminClient } from '@samkiel/authsdk';
 interface AuthContextType {
   user: SamkielUser | null;
   isLoading: boolean;
-  client: AdminClient | null;
+  client: AdminClient;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -18,15 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   
   const authsdk = useMemo(() => createClient(API_URL), []);
-
-  const client = useMemo(() => {
-    // In a real app, we might get the token from cookies or the user object
-    // For now, if we have a user, we assume we can create an admin client
-    // But AdminClient needs a token. The SDK's login returns tokens.
-    // If we're using cookies (standard for this setup), we might need to extract the token.
-    const token = document.cookie.split('; ').find(row => row.startsWith('sk_access_token='))?.split('=')[1];
-    return token ? new AdminClient(API_URL, token) : null;
-  }, [user]);
+  const client = useMemo(() => new AdminClient(API_URL), []);
 
   const fetchUser = async () => {
     try {
@@ -84,8 +76,5 @@ export function useAuth() {
 
 export function useAdmin() {
   const { client } = useAuth();
-  if (!client) {
-    throw new Error('Admin client not available');
-  }
   return client;
 }
