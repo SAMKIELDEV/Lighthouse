@@ -73,14 +73,14 @@ export function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary">Users & Accounts</h1>
-          <p className="text-secondary mt-1">Manage all accounts across the SAMKIEL ecosystem.</p>
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">Users & Accounts</h1>
+          <p className="text-secondary mt-1 text-sm md:text-base">Manage all accounts across the SAMKIEL ecosystem.</p>
         </div>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
           <input 
@@ -91,23 +91,24 @@ export function UsersPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-surface border border-border-color rounded-md text-sm font-medium hover:bg-base transition-colors">
+        <button className="flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border-color rounded-md text-sm font-medium hover:bg-base transition-colors">
           <Filter className="w-4 h-4" />
           Filters
         </button>
       </div>
 
       <div className="bg-surface border border-border-color rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border-color bg-base/50">
-              <th className="px-6 py-4 font-semibold">User</th>
-              <th className="px-6 py-4 font-semibold">Role</th>
-              <th className="px-6 py-4 font-semibold">Status</th>
-              <th className="px-6 py-4 font-semibold">Created</th>
-              <th className="px-6 py-4 font-semibold text-right">Actions</th>
-            </tr>
-          </thead>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm min-w-[600px] lg:min-w-0">
+            <thead>
+              <tr className="border-b border-border-color bg-base/50">
+                <th className="px-6 py-4 font-semibold">User</th>
+                <th className="px-6 py-4 font-semibold hidden sm:table-cell">Role</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold hidden md:table-cell">Created</th>
+                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
           <tbody className="divide-y divide-border-color">
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
@@ -181,10 +182,11 @@ export function UsersPage() {
           </tbody>
         </table>
       </div>
+    </div>
 
       {/* Pagination */}
       {!loading && users.length > 0 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-secondary">
             Showing <span className="text-primary font-medium">{users.length}</span> of <span className="text-primary font-medium">{total}</span> users
           </p>

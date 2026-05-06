@@ -50,15 +50,15 @@ export function SystemHealthPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary">System Health</h1>
-          <p className="text-secondary mt-1">Real-time status of all SAMKIEL studio infrastructure.</p>
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">System Health</h1>
+          <p className="text-secondary mt-1 text-sm md:text-base">Real-time status of all SAMKIEL studio infrastructure.</p>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
           <button 
             onClick={() => fetchHealth(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-base border border-border-color rounded-md text-sm font-bold hover:bg-surface transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-base border border-border-color rounded-md text-sm font-bold hover:bg-surface transition-colors w-full sm:w-auto"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh

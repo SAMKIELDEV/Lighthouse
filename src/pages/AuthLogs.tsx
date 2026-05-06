@@ -57,22 +57,22 @@ export function AuthLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary">Auth Logs</h1>
-          <p className="text-secondary mt-1">Audit trail for all authentication activity across the platform.</p>
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">Auth Logs</h1>
+          <p className="text-secondary mt-1 text-sm md:text-base">Audit trail for all authentication activity across the platform.</p>
         </div>
         <button 
           onClick={exportToCSV}
           disabled={logs.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-accent text-base rounded-md text-sm font-bold hover:bg-accent/90 transition-colors disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-accent text-base rounded-md text-sm font-bold hover:bg-accent/90 transition-colors disabled:opacity-50 w-full sm:w-auto"
         >
           <Download className="w-4 h-4" />
           Export CSV
         </button>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
           <input 
@@ -81,35 +81,38 @@ export function AuthLogsPage() {
             className="w-full bg-surface border border-border-color rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-accent transition-colors"
           />
         </div>
-        <select 
-          className="bg-surface border border-border-color rounded-md px-4 py-2 text-sm focus:outline-none focus:border-accent"
-          value={eventType}
-          onChange={(e) => setEventType(e.target.value)}
-        >
-          <option value="">All Events</option>
-          <option value="LOGIN_SUCCESS">Login Success</option>
-          <option value="LOGIN_FAILED">Login Failed</option>
-          <option value="REGISTER">Register</option>
-          <option value="PASSWORD_CHANGE">Password Change</option>
-          <option value="ACCOUNT_DELETED">Account Deleted</option>
-        </select>
-        <button className="flex items-center gap-2 px-4 py-2 bg-surface border border-border-color rounded-md text-sm font-medium hover:bg-base transition-colors">
-          <Calendar className="w-4 h-4" />
-          Date Range
-        </button>
+        <div className="flex gap-4">
+          <select 
+            className="flex-1 bg-surface border border-border-color rounded-md px-4 py-2 text-sm focus:outline-none focus:border-accent"
+            value={eventType}
+            onChange={(e) => setEventType(e.target.value)}
+          >
+            <option value="">All Events</option>
+            <option value="LOGIN_SUCCESS">Login Success</option>
+            <option value="LOGIN_FAILED">Login Failed</option>
+            <option value="REGISTER">Register</option>
+            <option value="PASSWORD_CHANGE">Password Change</option>
+            <option value="ACCOUNT_DELETED">Account Deleted</option>
+          </select>
+          <button className="flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border-color rounded-md text-sm font-medium hover:bg-base transition-colors">
+            <Calendar className="w-4 h-4" />
+            <span className="hidden sm:inline">Date Range</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-surface border border-border-color rounded-xl overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border-color bg-base/50">
-              <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Event</th>
-              <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">User</th>
-              <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">IP Address</th>
-              <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Status</th>
-              <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Timestamp</th>
-            </tr>
-          </thead>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm min-w-[700px] lg:min-w-0">
+            <thead>
+              <tr className="border-b border-border-color bg-base/50">
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Event</th>
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">User</th>
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">IP Address</th>
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Status</th>
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Timestamp</th>
+              </tr>
+            </thead>
           <tbody className="divide-y divide-border-color">
             {loading ? (
               Array.from({ length: 8 }).map((_, i) => (
@@ -153,10 +156,11 @@ export function AuthLogsPage() {
           </tbody>
         </table>
       </div>
+    </div>
 
       {/* Pagination */}
       {!loading && logs.length > 0 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-secondary">
             Page <span className="text-primary font-medium">{page}</span> of <span className="text-primary font-medium">{Math.ceil(total / 20)}</span>
           </p>

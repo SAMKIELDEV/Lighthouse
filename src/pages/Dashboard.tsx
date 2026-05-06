@@ -57,10 +57,10 @@ export function Dashboard() {
       transition={{ duration: 0.3 }}
       className="space-y-8"
     >
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary">Good evening, Ezekiel</h1>
-          <p className="text-secondary mt-1">Here's what's happening across the SAMKIEL ecosystem today.</p>
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">Good evening, Ezekiel</h1>
+          <p className="text-secondary mt-1 text-sm md:text-base">Here's what's happening across the SAMKIEL ecosystem today.</p>
         </div>
         <p className="text-[10px] text-secondary font-medium italic">
           Last updated: {lastUpdated.toLocaleTimeString()}

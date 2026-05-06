@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../lib/AuthContext';
@@ -14,13 +14,21 @@ const NAV_ITEMS = [
   { name: 'System Health', path: '/system', icon: Activity },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isMobile?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function Sidebar({ isMobile, onOpenChange }: SidebarProps) {
   const location = useLocation();
   const { user, signOut } = useAuth();
 
   return (
-    <div className="fixed inset-y-0 left-0 w-64 bg-surface border-r border-border-color flex flex-col z-10">
-      <div className="p-6">
+    <div className={cn(
+      "inset-y-0 left-0 w-64 lg:w-64 bg-surface border-r border-border-color flex flex-col z-10 h-full",
+      !isMobile && "fixed"
+    )}>
+      <div className="p-6 flex items-center justify-between">
         <Link to="/dashboard" className="flex items-center gap-3 group">
           <div className="relative">
             <div className="absolute -inset-1 bg-accent/20 rounded-lg blur-sm group-hover:bg-accent/30 transition-colors"></div>
@@ -31,9 +39,17 @@ export function Sidebar() {
             <span className="text-accent text-[10px] font-bold uppercase tracking-[0.2em] leading-none mt-1">Lighthouse</span>
           </div>
         </Link>
+        {isMobile && (
+          <button 
+            onClick={() => onOpenChange?.(false)}
+            className="p-2 -mr-2 text-secondary hover:text-primary transition-colors lg:hidden"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
-      <nav className="flex-1 px-4 space-y-1">
+      <nav className="flex-1 px-4 space-y-1 mt-4">
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
@@ -47,7 +63,7 @@ export function Sidebar() {
             >
               {isActive && (
                 <motion.div 
-                  layoutId="sidebar-active" 
+                  layoutId={isMobile ? "sidebar-active-mobile" : "sidebar-active"} 
                   className="absolute left-0 top-0 bottom-0 w-1 bg-accent rounded-r-md" 
                 />
               )}
@@ -60,7 +76,7 @@ export function Sidebar() {
 
       <div className="p-4 border-t border-border-color">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
+          <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-xs">
             {user?.name?.[0] || 'A'}
           </div>
           <div className="flex-1 min-w-0">
@@ -70,7 +86,7 @@ export function Sidebar() {
           <button 
             onClick={() => signOut()}
             aria-label="Sign Out" 
-            className="text-secondary hover:text-destructive transition-colors p-1 rounded-md hover:bg-base"
+            className="text-secondary hover:text-destructive transition-colors p-1.5 rounded-md hover:bg-base"
           >
             <LogOut className="w-4 h-4" />
           </button>
