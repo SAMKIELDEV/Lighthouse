@@ -11,11 +11,17 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { signIn } = useAuth();
+  const { signIn, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = location.state?.from?.pathname || '/dashboard';
+
+  React.useEffect(() => {
+    if (!isLoading && user && user.role === 'admin') {
+      navigate(from, { replace: true });
+    }
+  }, [user, isLoading, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
