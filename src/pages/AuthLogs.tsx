@@ -11,11 +11,17 @@ export function AuthLogsPage() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [eventType, setEventType] = useState('');
+  const [search, setSearch] = useState('');
 
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const res = await admin.getAuthLogs({ page, eventType, limit: 20 });
+      const res = await admin.getAuthLogs({ 
+        page, 
+        eventType, 
+        limit: 20,
+        userId: search // We'll update the backend to treat userId as a search term if it's not a valid ID
+      });
       setLogs(res.logs || []);
       setTotal(res.pagination.total);
     } catch (err) {
@@ -26,8 +32,12 @@ export function AuthLogsPage() {
   };
 
   useEffect(() => {
-    fetchLogs();
-  }, [page, eventType]);
+    const timer = setTimeout(() => {
+      fetchLogs();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [page, eventType, search]);
+
 
   const exportToCSV = () => {
     if (logs.length === 0) return;
@@ -78,8 +88,11 @@ export function AuthLogsPage() {
           <input 
             type="text"
             placeholder="Search by email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-surface border border-border-color rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-accent transition-colors"
           />
+
         </div>
         <div className="flex gap-4">
           <select 
