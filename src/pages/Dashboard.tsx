@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Users, Activity, Layers, AlertCircle } from 'lucide-react';
-import { systemHealth } from '@/mock/systemHealth';
+import { systemHealth } from '../mock/systemHealth';
 
 function StatCard({ title, value, icon: Icon, trend }: { title: string, value: string | number, icon: any, trend?: string }) {
   return (

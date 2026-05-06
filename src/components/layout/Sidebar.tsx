@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
@@ -57,7 +57,7 @@ export function Sidebar() {
             <p className="text-sm font-medium text-primary truncate">Ezekiel</p>
             <p className="text-xs text-secondary truncate">Admin</p>
           </div>
-          <button className="text-secondary hover:text-destructive transition-colors">
+          <button aria-label="Sign Out" className="text-secondary hover:text-destructive transition-colors">
             <LogOut className="w-4 h-4" />
           </button>
         </div>

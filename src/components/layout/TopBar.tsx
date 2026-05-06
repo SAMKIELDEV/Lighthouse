@@ -28,7 +28,7 @@ export function TopBar() {
           />
         </div>
         
-        <button className="relative text-secondary hover:text-primary transition-colors">
+        <button aria-label="Notifications" className="relative text-secondary hover:text-primary transition-colors">
           <Bell className="w-5 h-5" />
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full"></span>
         </button>
