@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, Loader2 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import Logo from '../assets/SAMKIEL_LOGO.png';
@@ -13,10 +13,11 @@ export function LoginPage() {
 
   const { signIn, user, isLoading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
 
   const redirectPath = searchParams.get('redirect') || '/dashboard';
+  const errorCode = searchParams.get('error');
+  const sessionExpired = errorCode === 'session_expired';
 
   React.useEffect(() => {
     if (!isLoading && user && user.role === 'admin') {
@@ -69,6 +70,12 @@ export function LoginPage() {
             Sign in to your SAMKIEL admin account to continue.
           </p>
         </div>
+
+        {sessionExpired && !error && (
+          <div className="mb-6 text-amber-300 text-sm text-center font-medium bg-amber-500/10 border border-amber-500/20 py-2.5 px-4 rounded-lg">
+            Your session expired. Please sign in again.
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
