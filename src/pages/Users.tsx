@@ -4,6 +4,7 @@ import { useAdmin } from '../lib/AuthContext';
 import { AdminUser, AdminUserDetail } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { CopyableId } from '../components/ui/CopyableId';
+import { Avatar } from '../components/ui/Avatar';
 import { Search, Filter, UserCheck, UserMinus, Trash2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -150,9 +151,7 @@ export function UsersPage() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-base border border-border-color flex items-center justify-center text-xs font-bold">
-                        {user.name?.[0] || 'U'}
-                      </div>
+                      <Avatar src={user.avatar} name={user.name} className="w-8 h-8" textClassName="text-xs font-bold" />
                       <div>
                         <p className="font-medium text-primary">{user.name}</p>
                         <p className="text-xs text-secondary">{user.email}</p>
@@ -260,9 +259,7 @@ export function UsersPage() {
 
               <div className="space-y-8">
                 <div className="flex items-center gap-4">
-                   <div className="w-16 h-16 rounded-full bg-base border border-border-color flex items-center justify-center text-2xl font-bold text-accent">
-                     {selectedUser.name?.[0] || 'U'}
-                   </div>
+                   <Avatar src={selectedUser.avatar} name={selectedUser.name} className="w-16 h-16" textClassName="text-2xl font-bold text-accent" />
                    <div>
                      <h4 className="text-lg font-bold text-primary">{selectedUser.name}</h4>
                      <p className="text-secondary">{selectedUser.email}</p>

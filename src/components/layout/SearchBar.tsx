@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Loader2, User, Box, FileText, X } from 'lucide-react';
+import { Search, Loader2, Box, FileText, X } from 'lucide-react';
 import { useAdmin } from '../../lib/AuthContext';
 import { SearchResults } from '@samkiel/authsdk';
+import { Avatar } from '../ui/Avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function SearchBar() {
@@ -112,9 +113,7 @@ export function SearchBar() {
                         onClick={() => handleSelect('user', u.id)}
                         className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-surface text-left transition-colors group"
                       >
-                        <div className="p-1.5 bg-accent/10 rounded-lg text-accent group-hover:bg-accent group-hover:text-black transition-colors">
-                          <User className="w-3.5 h-3.5" />
-                        </div>
+                        <Avatar src={u.avatar} name={u.name} className="w-7 h-7" textClassName="text-xs font-bold" />
                         <div>
                           <p className="text-sm font-bold text-primary">
                             {u.name}
