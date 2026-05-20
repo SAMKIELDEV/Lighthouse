@@ -42,10 +42,11 @@ export function AuthLogsPage() {
   const exportToCSV = () => {
     if (logs.length === 0) return;
     
-    const headers = ['ID', 'User Email', 'Event Type', 'Provider', 'IP Address', 'Status', 'Timestamp'];
+    const headers = ['ID', 'User Email', 'Username', 'Event Type', 'Provider', 'IP Address', 'Status', 'Timestamp'];
     const rows = logs.map(l => [
       l.id,
       l.userEmail,
+      l.username ? `@${l.username}` : 'N/A',
       l.eventType,
       l.provider || 'N/A',
       l.ipAddress || 'N/A',
@@ -121,6 +122,7 @@ export function AuthLogsPage() {
               <tr className="border-b border-border-color bg-base/50">
                 <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Event</th>
                 <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">User</th>
+                <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Username</th>
                 <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">IP Address</th>
                 <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Status</th>
                 <th className="px-6 py-4 font-semibold text-secondary uppercase tracking-wider text-[10px]">Timestamp</th>
@@ -133,13 +135,14 @@ export function AuthLogsPage() {
                   <td className="px-6 py-4"><Skeleton className="h-4 w-32" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-4 w-40" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-4 w-16" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-4 w-32" /></td>
                 </tr>
               ))
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-secondary">
+                <td colSpan={6} className="px-6 py-12 text-center text-secondary">
                   No logs found.
                 </td>
               </tr>
@@ -151,6 +154,9 @@ export function AuthLogsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-secondary">{log.userEmail}</span>
+                  </td>
+                  <td className="px-6 py-4 text-secondary">
+                    {log.username ? `@${log.username}` : '—'}
                   </td>
                   <td className="px-6 py-4 font-mono text-xs text-secondary">
                     {log.ipAddress || '—'}

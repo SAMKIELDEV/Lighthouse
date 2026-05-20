@@ -77,7 +77,7 @@ export function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.length >= 2 && setOpen(true)}
-        placeholder="Search users, apps, logs..." 
+        placeholder="Search by name, email, username, SAMKIEL ID..."
         className="bg-surface border border-border-color rounded-full py-1.5 pl-10 pr-10 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all w-64 md:w-80 text-primary"
       />
       {loading && (
@@ -116,8 +116,14 @@ export function SearchBar() {
                           <User className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-primary">{u.name}</p>
-                          <p className="text-[10px] text-secondary">{u.email}</p>
+                          <p className="text-sm font-bold text-primary">
+                            {u.name}
+                            {u.username && <span className="ml-1.5 font-normal text-secondary">@{u.username}</span>}
+                          </p>
+                          <p className="text-[10px] text-secondary">
+                            {u.email}
+                            {u.samkielId && <span className="ml-2 font-mono">{u.samkielId}</span>}
+                          </p>
                         </div>
                       </button>
                     ))}

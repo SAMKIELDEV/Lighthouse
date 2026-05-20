@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAdmin } from '../lib/AuthContext';
 import { AdminUser, AdminUserDetail } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
+import { CopyableId } from '../components/ui/CopyableId';
 import { Search, Filter, UserCheck, UserMinus, Trash2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -93,9 +94,9 @@ export function UsersPage() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
-          <input 
+          <input
             type="text"
-            placeholder="Search by name or email..."
+            placeholder="Search by name, email, username, or SAMKIEL ID..."
             className="w-full bg-surface border border-border-color rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-accent transition-colors"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -113,6 +114,8 @@ export function UsersPage() {
             <thead>
               <tr className="border-b border-border-color bg-base/50">
                 <th className="px-6 py-4 font-semibold">User</th>
+                <th className="px-6 py-4 font-semibold hidden lg:table-cell">Username</th>
+                <th className="px-6 py-4 font-semibold hidden md:table-cell">SAMKIEL ID</th>
                 <th className="px-6 py-4 font-semibold hidden sm:table-cell">Role</th>
                 <th className="px-6 py-4 font-semibold">Status</th>
                 <th className="px-6 py-4 font-semibold hidden md:table-cell">Created</th>
@@ -124,6 +127,8 @@ export function UsersPage() {
               Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i}>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-40" /></td>
+                  <td className="px-6 py-4 hidden lg:table-cell"><Skeleton className="h-5 w-24" /></td>
+                  <td className="px-6 py-4 hidden md:table-cell"><Skeleton className="h-5 w-28" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-16" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-20" /></td>
                   <td className="px-6 py-4"><Skeleton className="h-5 w-24" /></td>
@@ -132,7 +137,7 @@ export function UsersPage() {
               ))
             ) : users.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-secondary">
+                <td colSpan={7} className="px-6 py-12 text-center text-secondary">
                   No users found.
                 </td>
               </tr>
@@ -153,6 +158,12 @@ export function UsersPage() {
                         <p className="text-xs text-secondary">{user.email}</p>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-6 py-4 hidden lg:table-cell text-secondary">
+                    {user.username ? `@${user.username}` : <span className="text-secondary">—</span>}
+                  </td>
+                  <td className="px-6 py-4 hidden md:table-cell">
+                    <CopyableId value={user.samkielId} />
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${user.role === 'admin' ? 'bg-accent/10 text-accent' : 'bg-secondary/10 text-secondary'}`}>
@@ -259,6 +270,26 @@ export function UsersPage() {
                        {selectedUser.role}
                      </span>
                    </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h5 className="text-sm font-bold text-primary uppercase tracking-wider">Identifiers</h5>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center gap-4 text-sm">
+                      <span className="text-secondary">SAMKIEL ID</span>
+                      <CopyableId value={selectedUser.samkielId} className="text-sm" />
+                    </div>
+                    <div className="flex justify-between items-center gap-4 text-sm">
+                      <span className="text-secondary">Username</span>
+                      <span className="font-medium">{selectedUser.username ? `@${selectedUser.username}` : '—'}</span>
+                    </div>
+                    {selectedUser.usernameChangedAt && (
+                      <div className="flex justify-between items-center gap-4 text-sm">
+                        <span className="text-secondary">Username last changed</span>
+                        <span className="font-medium">{new Date(selectedUser.usernameChangedAt).toLocaleDateString()}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
