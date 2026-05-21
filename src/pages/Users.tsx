@@ -327,9 +327,28 @@ export function UsersPage() {
                   ) : (
                     <div className="space-y-2">
                       {selectedUser.connectedProducts.map((p: any) => (
-                        <div key={p.id} className="flex items-center justify-between p-3 bg-base/30 border border-border-color rounded-lg text-sm">
-                          <span className="font-medium">{p.name}</span>
-                          <span className="text-xs text-secondary">Since {new Date(p.connectedAt).toLocaleDateString()}</span>
+                        <div key={p.id} className="p-3 bg-base/30 border border-border-color rounded-lg text-sm">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="font-medium text-primary">{p.name}</span>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                p.status === 'active'
+                                  ? 'bg-success/10 text-success'
+                                  : 'bg-warning/10 text-warning'
+                              }`}
+                            >
+                              {p.status === 'active' ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-secondary">
+                            <span>Connected {new Date(p.connectedAt).toLocaleDateString()}</span>
+                            {p.lastActiveAt && (
+                              <>
+                                <span aria-hidden="true">·</span>
+                                <span>Last active {new Date(p.lastActiveAt).toLocaleString()}</span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
