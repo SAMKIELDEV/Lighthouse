@@ -9,6 +9,8 @@ interface AlertOptions {
   description: string;
   type?: AlertType;
   confirmText?: string;
+  cancelText?: string;
+  showCancel?: boolean;
   onConfirm?: () => void;
 }
 

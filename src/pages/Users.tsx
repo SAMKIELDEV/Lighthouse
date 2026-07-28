@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAdmin } from '../lib/AuthContext';
+import { useAlert } from '../lib/AlertContext';
 import { AdminUser, AdminUserDetail } from '@samkiel/authsdk';
 import { Skeleton } from '../components/ui/Skeleton';
 import { CopyableId } from '../components/ui/CopyableId';
@@ -10,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function UsersPage() {
   const admin = useAdmin();
+  const { showAlert } = useAlert();
   const [searchParams] = useSearchParams();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,34 +54,53 @@ export function UsersPage() {
 
     try {
       await admin.suspendUser(id, suspended);
-    } catch (err) {
+    } catch (err: any) {
       // Revert on error
       setUsers(prev => prev.map(u => u.id === id ? { ...u, suspended: !suspended } : u));
       if (selectedUser?.id === id) {
         setSelectedUser({ ...selectedUser, suspended: !suspended });
       }
-      alert('Failed to update user status');
+      showAlert({
+        title: 'Error',
+        description: err.message || 'Failed to update user status',
+        type: 'error'
+      });
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')) return;
-
-    try {
-      await admin.deleteUser(id);
-      setUsers(prev => prev.filter(u => u.id !== id));
-      if (selectedUser?.id === id) setSelectedUser(null);
-    } catch (err) {
-      alert('Failed to delete user');
-    }
+  const handleDelete = (id: string) => {
+    showAlert({
+      title: 'Delete User',
+      description: 'Are you sure you want to permanently delete this user? This action cannot be undone.',
+      type: 'error',
+      confirmText: 'Delete',
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          await admin.deleteUser(id);
+          setUsers(prev => prev.filter(u => u.id !== id));
+          if (selectedUser?.id === id) setSelectedUser(null);
+        } catch (err: any) {
+          showAlert({
+            title: 'Error',
+            description: err.message || 'Failed to delete user',
+            type: 'error'
+          });
+        }
+      }
+    });
   };
 
   const viewUserDetail = async (id: string) => {
     try {
       const user = await admin.getUserById(id);
       setSelectedUser(user);
-    } catch (err) {
-      alert('Failed to fetch user details');
+    } catch (err: any) {
+      showAlert({
+        title: 'Error',
+        description: err.message || 'Failed to fetch user details',
+        type: 'error'
+      });
     }
   };
 

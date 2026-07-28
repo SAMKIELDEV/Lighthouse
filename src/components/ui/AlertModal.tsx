@@ -9,6 +9,8 @@ interface AlertModalProps {
   description: string;
   type?: AlertType;
   confirmText?: string;
+  cancelText?: string;
+  showCancel?: boolean;
   onConfirm?: () => void;
   onClose: () => void;
 }
@@ -41,10 +43,13 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   description,
   type = 'info',
   confirmText = 'Got it',
+  cancelText = 'Cancel',
+  showCancel,
   onConfirm,
   onClose,
 }) => {
   const styles = alertStyles[type];
+  const shouldShowCancel = showCancel ?? Boolean(onConfirm);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -90,13 +95,21 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             {description}
           </p>
 
-          <div className="mt-2 flex justify-end">
+          <div className="mt-2 flex justify-end gap-3">
+            {shouldShowCancel && (
+              <button
+                onClick={onClose}
+                className="px-5 py-2.5 rounded-xl font-medium text-secondary hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all active:scale-95 cursor-pointer"
+              >
+                {cancelText}
+              </button>
+            )}
             <button
               onClick={() => {
                 onConfirm?.();
                 onClose();
               }}
-              className={`px-6 py-2.5 rounded-xl font-medium transition-all active:scale-95 ${
+              className={`px-6 py-2.5 rounded-xl font-medium transition-all active:scale-95 cursor-pointer ${
                 type === 'info' 
                   ? 'bg-accent text-base hover:brightness-110' 
                   : `${styles.accentColor} text-black hover:brightness-110`
