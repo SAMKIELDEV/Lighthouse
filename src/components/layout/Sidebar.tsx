@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, Users, Grid, BarChart3, ShieldAlert, Activity, LogOut, X, Bot } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../lib/AuthContext';
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { name: 'Users & Accounts', path: '/users', icon: Users },
   { name: 'Products & Apps', path: '/products', icon: Grid },
   { name: 'Studio Metrics', path: '/studio', icon: BarChart3 },
+  { name: 'Zox Operations', path: '/zox', icon: Bot },
   { name: 'Auth Logs', path: '/auth-logs', icon: ShieldAlert },
   { name: 'System Health', path: '/system', icon: Activity },
 ];

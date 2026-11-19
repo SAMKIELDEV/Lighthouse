@@ -1,5 +1,12 @@
 # React + Vite
 
+## Zox operations
+
+The `/zox` module reads a protected operational snapshot from
+`GET $VITE_ZOX_ADMIN_API_URL/overview`. Configure the base URL in `.env` from
+the included `.env.example`. Requests include SAMKIEL ID cookies and the API
+must allow credentials from the Lighthouse origin.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

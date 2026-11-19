@@ -9,6 +9,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/studio': 'Studio',
   '/auth-logs': 'Auth Logs',
   '/system': 'Health',
+  '/zox': 'Zox Operations',
 };
 
 interface TopBarProps {

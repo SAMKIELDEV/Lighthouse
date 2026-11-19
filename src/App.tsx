@@ -6,6 +6,7 @@ import { ProductsPage } from './pages/Products';
 import { StudioPage } from './pages/Studio';
 import { AuthLogsPage } from './pages/AuthLogs';
 import { SystemHealthPage } from './pages/SystemHealth';
+import { ZoxPage } from './pages/Zox';
 import { LoginPage } from './pages/Login';
 import { NotFoundPage } from './pages/NotFound';
 import { AuthProvider } from './lib/AuthContext';
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="studio" element={<StudioPage />} />
               <Route path="auth-logs" element={<AuthLogsPage />} />
               <Route path="system" element={<SystemHealthPage />} />
+              <Route path="zox" element={<ZoxPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
